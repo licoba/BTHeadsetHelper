@@ -6,6 +6,8 @@ name: Java CI with Gradle
 on:
   push:
     branches: [main]
+    tags:
+      - 'v*' # Push events to matching v*, i.e. v1.0, v20.15.10
   pull_request:
     branches: [main]
 
@@ -27,11 +29,29 @@ jobs:
           echo "开始进行release构建" 
           ./gradlew assembleRelease
           echo "release构建完毕"
-      - name: Publish to Release
-        uses: elgohr/Github-Release-Action@master
+        # run: echo "上传apk至Artifacts"
+      # - name: Upload Apk
+      # - uses: actions/upload-artifact@v2
+      #   with:
+      #     name: BTHeadsetHelper
+      #     path: app/build/outputs/apk/release/app-release.apk
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
         env:
-          GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          args: v1.0.0
-     
-           
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          draft: false
+          prerelease: false
+      - name: Upload Release Asset
+        id: upload-release-asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
+          asset_path: app/build/outputs/apk/release/app-release.apk
+          asset_name: BTHeadsetHelper.apk
+          asset_content_type: application/zip
