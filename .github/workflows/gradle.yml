@@ -24,4 +24,13 @@ jobs:
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
     - name: Build with Gradle
-      run: ./gradlew assembleRelease
+      run: | 
+       echo "开始进行release构建" 
+       ./gradlew assembleRelease
+       echo "release构建完毕" 
+    - name: Upload Apk
+      run: echo "上传apk至Artifacts" 
+    - uses: actions/upload-artifact@v2
+      with:
+        name: BTHeadsetHelper
+        path: app/build/outputs/apk/release/app-release.apk
