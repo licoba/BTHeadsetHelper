@@ -2,6 +2,7 @@ package com.example.bthelper;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.media.AudioDeviceInfo;
 import android.media.AudioFormat;
@@ -176,6 +177,10 @@ public class ScrollingActivity extends AppCompatActivity implements View.OnClick
 
     public void startStopRecord(int viewId) {
         if (viewId == R.id.startRecord) {
+            if (checkSelfPermission(Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_DENIED || checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED) {
+                Snackbar.make(rootLayout, "请授予录音和存储权限！", Snackbar.LENGTH_SHORT).show();
+                return;
+            }
             if (isWorking) return;
             isWorking = true;
             new Thread(() -> {
@@ -185,6 +190,7 @@ public class ScrollingActivity extends AppCompatActivity implements View.OnClick
                 bufferSize = frames * defaultMonoFrameLen;
                 byte[] srcBuffer = new byte[bufferSize];
                 byte[] buffer = new byte[defaultMonoFrameLen];
+
                 mAudioRecord = new AudioRecord(defaultAudioSource, defaultSampleRateInHz, defaultChannelConfigIn, defaultAudioFormat, bufferSize);
                 for (AudioDeviceInfo device : audioManager.getDevices(AudioManager.GET_DEVICES_INPUTS))
                     Log.e(TAG, "所有的音频输入设备：" + device.getProductName() + " type:" + device.getType() + " id:" + device.getId());
