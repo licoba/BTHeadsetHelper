@@ -28,10 +28,10 @@ jobs:
           ./gradlew assembleRelease
           echo "release构建完毕"
       - name: Publish to Release
-          uses: elgohr/Github-Release-Action@master
-            env:
-              GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
-            with:
-              args: v1.0.0
+        uses: elgohr/Github-Release-Action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
+        with:
+          args: v1.0.0
      
            
