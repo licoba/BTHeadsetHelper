@@ -27,6 +27,7 @@ import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.Arrays;
 import java.util.Timer;
@@ -192,22 +193,30 @@ public class ScrollingActivity extends AppCompatActivity implements View.OnClick
                 byte[] buffer = new byte[defaultMonoFrameLen];
 
                 mAudioRecord = new AudioRecord(defaultAudioSource, defaultSampleRateInHz, defaultChannelConfigIn, defaultAudioFormat, bufferSize);
-                for (AudioDeviceInfo device : audioManager.getDevices(AudioManager.GET_DEVICES_INPUTS))
-                    Log.e(TAG, "所有的音频输入设备：" + device.getProductName() + " type:" + device.getType() + " id:" + device.getId());
-                for (AudioDeviceInfo device : audioManager.getDevices(AudioManager.GET_DEVICES_INPUTS)) {
-                    if (device.getType() == TYPE_BLUETOOTH_SCO) {
-                        Log.e(TAG, "设置SCO为首选音频输入设备");
-                        if (mAudioRecord != null) {
-                            boolean status = mAudioRecord.setPreferredDevice(device);
-                            if (status) Log.e(TAG, "设置成功");
-                            else Log.e(TAG, "设置失败");
-                        }
-                        break;
-                    }
-                }
+
+                // 设置了下面的东西之后，可能会导致问题：
+                //  mAudioRecord.startRecording();的时候报错，导致无法开始录音
+                // restoreRecord_l(287): dead IAudioRecord, creating a new one from start()
+
+//                for (AudioDeviceInfo device : audioManager.getDevices(AudioManager.GET_DEVICES_INPUTS))
+//                    Log.e(TAG, "所有的音频输入设备：" + device.getProductName() + " type:" + device.getType() + " id:" + device.getId());
+//                for (AudioDeviceInfo device : audioManager.getDevices(AudioManager.GET_DEVICES_INPUTS)) {
+//                    if (device.getType() == TYPE_BLUETOOTH_SCO) {
+//                        Log.e(TAG, "设置SCO为首选音频输入设备");
+//                        if (mAudioRecord != null) {
+//                            boolean status = mAudioRecord.setPreferredDevice(device);
+//                            if (status) Log.e(TAG, "设置成功");
+//                            else Log.e(TAG, "设置失败");
+//                        }
+//                        break;
+//                    }
+//                }
                 if (mAudioRecord != null) {
+                    Log.e(TAG,"mAudioRecord.startRecording()");
                     SaveManager.getInstance(context).open();
                     mAudioRecord.startRecording();
+                }else{
+                    Toast.makeText(this,"mAudioRecord 为空",Toast.LENGTH_LONG);
                 }
                 while (isWorking) {
                     int bufferReadResult = mAudioRecord.read(srcBuffer, 0, bufferSize);
@@ -317,7 +326,7 @@ public class ScrollingActivity extends AppCompatActivity implements View.OnClick
                 bufferSize, AudioTrack.MODE_STREAM);
         int audioLen = sound.length / 2;
         Log.e(TAG, "AudioTrack 开始播放");
-        tvPlay.setText("正在播放");
+        tvPlay.setText("正在播放……");
         audioTrack.setNotificationMarkerPosition(audioLen);
         audioTrack.setPlaybackPositionUpdateListener(new AudioTrack.OnPlaybackPositionUpdateListener() {
             @Override

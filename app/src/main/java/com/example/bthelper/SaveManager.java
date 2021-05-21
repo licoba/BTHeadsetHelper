@@ -52,8 +52,8 @@ public class SaveManager {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        } else
-            Log.e(TAG, "输出流为空，请先open");
+        }
+//            Log.e(TAG, "输出流为空，请先open");
     }
 
 
