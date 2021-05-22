@@ -10,7 +10,8 @@
 
         "二、在播放音乐时，设置Mode为通话模式，然后开启Sco，歌声会通过Sco通道播放出来。\n\n"
 
-        "三、播放没声音时，可以切换下Mod、Sco和StreamType。\n\n"
+        "三、播放没声音时，可以切换下Mode、StreamType和开关Sco。\n\n"
+
 
     </string>
 

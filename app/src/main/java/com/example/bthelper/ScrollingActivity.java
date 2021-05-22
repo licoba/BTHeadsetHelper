@@ -42,6 +42,7 @@ public class ScrollingActivity extends AppCompatActivity implements View.OnClick
     Button getMode;
     Button setCommButton;
     Button setNormal;
+    Button setInCall;
 
 
     Button getSpeaker;
@@ -105,6 +106,7 @@ public class ScrollingActivity extends AppCompatActivity implements View.OnClick
                 int mode = audioManager.getMode();
                 if (mode == AudioManager.MODE_IN_COMMUNICATION) msgMode = "MODE_IN_COMMUNICATION";
                 else if (mode == AudioManager.MODE_NORMAL) msgMode = "MODE_NORMAL";
+                else if (mode == AudioManager.MODE_IN_CALL) msgMode = "MODE_IN_CALL";
                 tvMode.setText(msgMode);
 
                 boolean isSpeakerphoneOn = audioManager.isSpeakerphoneOn();
@@ -134,6 +136,8 @@ public class ScrollingActivity extends AppCompatActivity implements View.OnClick
             audioManager.setMode(AudioManager.MODE_IN_COMMUNICATION);
         } else if (viewId == R.id.setNormal) {
             audioManager.setMode(AudioManager.MODE_NORMAL);
+        } else if(viewId == R.id.setInCall){
+            audioManager.setMode(AudioManager.MODE_IN_CALL);
         }
 
         updateStatus(R.id.getMode, true);
@@ -269,6 +273,7 @@ public class ScrollingActivity extends AppCompatActivity implements View.OnClick
         switch (id) {
             case R.id.setCommButton:
             case R.id.setNormal:
+            case R.id.setInCall:
                 setMode(id);
                 break;
 
@@ -377,6 +382,7 @@ public class ScrollingActivity extends AppCompatActivity implements View.OnClick
             int mode = audioManager.getMode();
             if (mode == AudioManager.MODE_IN_COMMUNICATION) msg = "MODE_IN_COMMUNICATION";
             else if (mode == AudioManager.MODE_NORMAL) msg = "MODE_NORMAL";
+            else if (mode == AudioManager.MODE_IN_CALL) msg = "MODE_IN_CALL";
             tvMode.setText(msg);
         } else if (id == R.id.getSpeaker || id == R.id.getSpeaker2) {
             boolean mode = audioManager.isSpeakerphoneOn();
@@ -403,6 +409,7 @@ public class ScrollingActivity extends AppCompatActivity implements View.OnClick
         getMode = findViewById(R.id.getMode);
         setCommButton = findViewById(R.id.setCommButton);
         setNormal = findViewById(R.id.setNormal);
+        setInCall = findViewById(R.id.setInCall);
 
         getSpeaker = findViewById(R.id.getSpeaker);
         setSpeakerOn = findViewById(R.id.setSpeakerOn);
@@ -431,6 +438,7 @@ public class ScrollingActivity extends AppCompatActivity implements View.OnClick
         getMode.setOnClickListener(this);
         setCommButton.setOnClickListener(this);
         setNormal.setOnClickListener(this);
+        setInCall.setOnClickListener(this);
         getSpeaker.setOnClickListener(this);
         setSpeakerOn.setOnClickListener(this);
         setSpeakerOff.setOnClickListener(this);
